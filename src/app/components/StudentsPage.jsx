@@ -11,7 +11,6 @@ import {
   Card,
   Table,
   Stack,
-  Paper,
   Button,
   Popover,
   TableRow,
@@ -34,7 +33,6 @@ import {
 // Icons
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import NotificationsIcon from "@mui/icons-material/Notifications";

@@ -28,7 +28,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const { user } = useAuth();
-  console.log("user", user);
 
   if (user) {
     router.push("/");

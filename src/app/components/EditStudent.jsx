@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import {
@@ -9,16 +9,32 @@ import {
   Button,
   TextField,
   Stack,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 
 const EditStudent = ({ isOpen, onClose, student, onUpdate }) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
-    name: student?.name || "",
-    class: student?.class || "",
-    section: student?.section || "",
-    rollNo: student?.rollNo || "",
-    ID: student?.ID || "",
+    name: "",
+    class: "",
+    section: "",
+    rollNo: "",
+    ID: "",
   });
+
+  useEffect(() => {
+    if (student) {
+      setFormData({
+        name: student.name || "",
+        class: student.class || "",
+        section: student.section || "",
+        rollNo: student.rollNo || "",
+        ID: student.id || "",
+      });
+    }
+  }, [student]);
 
   const handleChange = (e) => {
     setFormData({
@@ -29,13 +45,26 @@ const EditStudent = ({ isOpen, onClose, student, onUpdate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    // Validation
+    if (!formData.name || !formData.class || !formData.rollNo) {
+      setError("Name, Class and Roll No are required fields");
+      setLoading(false);
+      return;
+    }
+
     try {
       const studentRef = doc(db, "students", student.id);
       await updateDoc(studentRef, formData);
       onUpdate();
       onClose();
     } catch (error) {
+      setError(error.message);
       console.error("Error updating student: ", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,12 +73,14 @@ const EditStudent = ({ isOpen, onClose, student, onUpdate }) => {
       <DialogTitle>Edit Student</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ mt: 2 }}>
+          {error && <Alert severity="error">{error}</Alert>}
           <TextField
             name="ID"
             label="Student ID"
             value={formData.ID}
             onChange={handleChange}
             fullWidth
+            disabled
           />
           <TextField
             name="name"
@@ -57,6 +88,8 @@ const EditStudent = ({ isOpen, onClose, student, onUpdate }) => {
             value={formData.name}
             onChange={handleChange}
             fullWidth
+            required
+            error={!formData.name}
           />
           <TextField
             name="class"
@@ -64,6 +97,8 @@ const EditStudent = ({ isOpen, onClose, student, onUpdate }) => {
             value={formData.class}
             onChange={handleChange}
             fullWidth
+            required
+            error={!formData.class}
           />
           <TextField
             name="section"
@@ -78,13 +113,22 @@ const EditStudent = ({ isOpen, onClose, student, onUpdate }) => {
             value={formData.rollNo}
             onChange={handleChange}
             fullWidth
+            required
+            error={!formData.rollNo}
           />
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit} variant="contained">
-          Update
+        <Button onClick={onClose} disabled={loading}>
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          disabled={loading}
+          startIcon={loading && <CircularProgress size={20} />}
+        >
+          {loading ? "Updating..." : "Update"}
         </Button>
       </DialogActions>
     </Dialog>

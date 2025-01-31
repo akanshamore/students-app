@@ -34,7 +34,6 @@ export default function SignupPage() {
   const [passwordError, setPasswordError] = useState("");
 
   const { user } = useAuth();
-  console.log("user", user);
 
   if (user) {
     router.push("/");
@@ -51,9 +50,6 @@ export default function SignupPage() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       const user = auth.currentUser;
-      console.log(user);
-
-      console.log("User registered successfully");
       toast.success("Registration successful!", { position: "top-center" });
       router.push("/");
     } catch (error) {
