@@ -306,7 +306,11 @@ const StudentsPage = () => {
         </Container>
       </Box>
 
-      <AddStudent isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <AddStudent
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onAdd={handleUpdate}
+      />
       <EditStudent
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}

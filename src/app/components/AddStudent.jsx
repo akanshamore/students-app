@@ -18,7 +18,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 
-function AddStudent({ isOpen, onClose }) {
+function AddStudent({ isOpen, onClose, onAdd }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const initialFormData = {
@@ -85,6 +85,7 @@ function AddStudent({ isOpen, onClose }) {
         createdAt: new Date().toISOString(),
       });
       setFormData(initialFormData);
+      onAdd();
       onClose();
     } catch (error) {
       setError(error.message);
