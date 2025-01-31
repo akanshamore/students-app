@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { auth, db } from "./firebase";
+import { auth, db } from "../firebase";
 import AddStudent from "./AddStudent";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
